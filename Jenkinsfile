@@ -22,7 +22,7 @@ git branch: 'main', url: 'https://github.com/nargizrt/cicd-pipeline.git'
        stage('Build Docker Image') {
            steps {
                // Build the Docker image
-               sh 'docker build -t n_cicd_image .'
+               sh 'docker build -t nargizzz/n_cicd_image .'
            }
        }
    }
