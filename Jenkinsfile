@@ -1,38 +1,43 @@
 pipeline {
-agent any
-tools {nodejs "npm"}
-environment {
-DOCKERHUB_CREDENTIALS= credentials(‘nargizzz’)
-}
-stages {
-stage('Git Checkout') {
-
-steps {
-git branch: 'main', url: 'https://github.com/nargizrt/cicd-pipeline.git'
-}
-}
-stage('Build App') {
-steps {
-sh '''chmod +x scripts/build.sh
-./scripts/build.sh '''
-}
-}
-stage('Test App') {
-steps {
-sh './scripts/test.sh'
-}
-}
-stage('Build and Push the image to Docker Hub') {
-steps {
-script {
-def nodeAppDockerfilePath = './Dockerfile'
-sh "docker build -t nargizzz/n_cicd_image:$BUILD_NUMBER -f ${nodeAppDockerfilePath} ."
-sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-docker.io'
-sh 'docker push nargizzz/n_cicd_image:$BUILD_NUMBER'
-sh 'docker logout'
-}
-}
-}
-}
+   agent any
+   stages {
+       stage('Preparation') {
+           steps {
+               // Check out the source code from your repository
+               checkout scm
+           }
+       }
+       stage('Set Permissions') {
+           steps {
+               // Make the build script executable
+               sh 'chmod +x scripts/build.sh'
+           }
+       }
+       stage('Build') {
+           steps {
+               // Run the build script
+               sh './scripts/build.sh'
+           }
+       }
+       stage('Test') {
+           steps {
+               // Run the test script
+               sh './scripts/test.sh'
+           }
+       }
+       stage('Build Docker Image') {
+           steps {
+               // Build the Docker image
+               sh 'docker build -t n_cicd_image .'
+           }
+       }
+   }
+   post {
+       success {
+           echo 'Pipeline completed successfully!'
+       }
+       failure {
+           echo 'Pipeline failed. Please check the logs.'
+       }
+   }
 }
