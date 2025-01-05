@@ -1,22 +1,17 @@
 pipeline {
    agent any
+tools {nodejs "npm"}
    stages {
-       stage('Preparation') {
+       stage('checkout') {
            steps {
-               // Check out the source code from your repository
-               checkout scm
-           }
+git branch: 'main', url: 'https://github.com/nargizrt/cicd-pipeline.git'
+}
        }
-       stage('Set Permissions') {
+       stage('build app') {
            steps {
                // Make the build script executable
-               sh 'chmod +x scripts/build.sh'
-           }
-       }
-       stage('Build') {
-           steps {
-               // Run the build script
-               sh './scripts/build.sh'
+               sh '''chmod +x scripts/build.sh
+./scripts/build.sh '''
            }
        }
        stage('Test') {
