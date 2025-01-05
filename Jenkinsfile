@@ -9,9 +9,8 @@ git branch: 'main', url: 'https://github.com/nargizrt/cicd-pipeline.git'
        }
        stage('build app') {
            steps {
-               // Make the build script executable
-               sh '''chmod +x scripts/build.sh
-./scripts/build.sh '''
+               sh 'chmod +x scripts/build.sh'
+               sh './scripts/build.sh'
            }
        }
        stage('Test') {
