@@ -44,7 +44,7 @@ stage('Push') {
     environment {
       IMAGE_NAME = 'nargizrt/cicd-pipeline'
     }
-   }
+   
    post {
        success {
            echo 'Pipeline completed successfully!'
